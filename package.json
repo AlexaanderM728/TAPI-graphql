@@ -1,0 +1,29 @@
+{
+  "name": "tapi-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexaanderM728/TAPI-graphql.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexaanderM728/TAPI-graphql/issues"
+  },
+  "homepage": "https://github.com/AlexaanderM728/TAPI-graphql#readme",
+  "dependencies": {
+    "@apollo/server": "^4.11.2",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6"
+  }
+}
