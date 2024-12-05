@@ -1,0 +1,426 @@
+----- Merg Product List --------------
+
+query AllprodcutsWithsupp{
+  products {
+    id
+    name
+    nutritional_values {
+      carbohydrates
+      proteins
+      fats
+    }
+    supplier {
+      id_supplier
+      name
+      rating
+      contact_info {
+        address
+        phone
+      }
+    }
+    category {
+      id_category
+      name
+      description
+    }
+  }
+}
+
+----- Merg Product List --------------
+
+-----AllCategories----------------
+query AllCategories{
+  categories {
+    id_category
+    name
+    description
+  }
+}
+
+-----AllCategories----------------
+
+-----AllSuppilers-----------------
+query AllSuppilers{
+suppliers {
+  id_supplier
+  name
+  rating
+  contact_info {
+    address
+    phone
+  }
+}
+}
+-----AllSuppilers-----------------
+
+----- Produkt ID --------------
+
+query GetProduct($id: ID!) {
+  product(id: $id) {
+    id
+    name
+    nutritional_values {
+      carbohydrates
+      proteins
+      fats
+    }
+    id_supplier {
+      id_supplier
+      name
+      contact_info {
+        address
+        phone
+      }
+    }
+    category_id {
+      id_category
+      name
+      main_category
+      description
+    }
+  }
+}
+
+json : 
+{
+    "id" : 1
+}
+
+----- Produkt ID --------------
+
+----- GetSortetdProducts ------
+
+query GetSortedProducts($sortBy: String, $sortOrder: String) {
+  products(sortBy: $sortBy, sortOrder: $sortOrder) {
+    id
+    name
+    nutritional_values {
+      carbohydrates
+      proteins
+      fats
+    }
+    category {
+      id_category
+      name
+    }
+    supplier {
+      id_supplier
+      name
+    }
+  }
+}
+
+
+{
+  "sortBy": "name",
+  "sortOrder": "asc"
+}
+
+----- GetSortetdProducts ------
+
+---- Category ID --------------
+
+query GetCategoryID($idCategory: ID! ){
+  category(id_category: $idCategory) {
+    main_category
+    name
+    id_category
+  }
+}
+
+josn : 
+{
+  "idCategory": 101
+}
+---- Category ID --------------
+
+---- GetSupplierID --------------
+
+query GetSupplierID($idSupplier: ID!){
+  supplier(id_supplier: $idSupplier) {
+    id_supplier
+    name
+    rating
+    contact_info {
+      address
+      phone
+    }
+  }
+}
+
+{
+  "idSupplier": 50
+}
+---- GetSupplierID --------------
+
+---- NEW product ----------------
+
+mutation addNewProduct($input: ProductInput!){
+  addProduct(input: $input){
+    id
+    name
+    category {
+      id_category
+    }
+    supplier {
+      id_supplier
+    }
+    nutritional_values {
+      carbohydrates
+      proteins
+      fats
+    }
+  }
+}
+
+{
+  "input": {
+    "name": "Energolec",
+    "category_id": 105 ,
+    "supplier_id": "1",
+    "nutritional_values": {
+      "carbohydrates": 9.9 ,
+      "proteins": 2,
+      "fats": 0
+    }
+
+  }
+}
+
+
+---- NEW product ----------------
+
+----- Delete Product by ID -------
+
+mutation DeleteProduct($id: ID!) {
+  deleteProduct(id: $id) {
+    id
+    name
+    category_id
+    id_supplier
+  }
+}
+
+{
+  "id": 1
+}
+
+----- Delete Product by ID -------
+
+------ Update product bt ID -------
+
+mutation UpdateProduct($id: ID!, $input: UpdateProductInput!) {
+  updateProduct(id: $id, input: $input) {
+    id
+    name
+    category_id
+    id_supplier
+    nutritional_values {
+      carbohydrates
+      proteins
+      fats
+    }
+  }
+}
+
+------ Update product bt ID -------
+
+------ Filer mix product -----------
+
+query GetFilteredProducts($filter: ProductFilter) {
+  products(filter: $filter) {
+    id
+    name
+    category_id
+    supplier {
+      id_supplier
+      name
+      rating
+    }
+    nutritional_values {
+      carbohydrates
+      proteins
+      fats
+    }
+  }
+}
+
+
+{
+  "filter": {
+    "category_id": 101,
+    "min_carbohydrates": 5,
+    "max_carbohydrates": 10,
+    "min_rating": 2.5
+  }
+}
+
+------ Filer mix product -----------
+
+------- ADD new supplier ----------
+
+mutation AddSupplier($input: SupplierInput!) {
+  addSupplier(input: $input) {
+    id_supplier
+    name
+    contact_info {
+      address
+      phone
+    }
+    rating
+  }
+}
+
+{
+  "input": {
+    "name": "Best Supplier",
+    "rating": 4.8,
+    "contact_info": {
+      "address": "123 Main Street",
+      "phone": "123456789"
+    }
+  }
+}
+
+
+------- ADD new supplier ----------
+
+------- Delete Supplier -----------
+
+mutation DeleteSuppier($deleteSupplierId: ID!){
+  deleteSupplier(id: $deleteSupplierId) {
+    id_supplier
+    name
+    contact_info {
+      address
+      phone
+    }
+  }
+}
+
+{
+  "deleteSupplierId": 101
+}
+
+------- Delete Supplier -----------
+
+------- Update Supplier -----------
+
+mutation UpdateSupplier($id: ID!, $input: UpdateSupplierInput!) {
+  updateSupplier(id: $id, input: $input) {
+    id_supplier
+    name
+    contact_info {
+      address
+      phone
+    }
+    rating
+  }
+}
+
+{
+  "id": "1",
+  "input": {
+    "rating": 7.0,
+    "name": "Mendoza and Johnson"
+  }
+}
+
+------- Update Supplier -----------
+
+------- Filer mix Supplier --------
+
+query GetSuppliers(
+  $filter: SupplierFilter
+  $limit: Int
+  $offset: Int
+  $sortBy: String
+  $sortOrder: String
+) {
+  suppliers(
+    filter: $filter
+    limit: $limit
+    offset: $offset
+    sortBy: $sortBy
+    sortOrder: $sortOrder
+  ) {
+    id_supplier
+    name
+    rating
+    contact_info {
+      address
+      phone
+    }
+  }
+}
+
+
+{
+  "filter": {
+    "min_rating": 3.0,
+    "max_rating": 5.0,
+    
+  },
+  "limit": 10,
+  "offset": 0,
+  "sortBy": "rating",
+  "sortOrder": "asc"
+}
+
+------- Filer mix Supplier --------
+
+------- Add Category --------------
+
+mutation AddCategory($input: CategoryInput!){
+  addCategory(input: $input) {
+    name,
+    main_category,
+    description
+  }
+}
+
+{
+  "input": {
+    "name": "Alkohole",
+    "main_category": "PRodukty spożywcze",
+    "description": "PRzeznacozne dla osob pełnoletnich"
+  }
+}
+
+------- Add Category --------------
+
+------- Update Category --------------
+
+mutation UpdateCategory($id: ID!, $input: UpdateCategoryInput!){
+  updateCategory(id: $id, input: $input) {
+    name,
+    main_category,
+    description
+  }
+}
+
+{
+  "id": "7",
+  "input": {
+    "name": "Alkohol",
+  
+  }
+}
+
+------- Update Category --------------
+
+------- Delete Category --------------
+
+mutation DeleteCategory($deleteCategoryId: ID!){
+  deleteCategory(id: $deleteCategoryId) {
+    name,
+    main_category,
+    description
+  }
+}
+
+{
+  "deleteCategoryId": 7
+}
+
+------- Delete Category --------------
