@@ -114,8 +114,14 @@ const typeDefs = gql`
   # Typ wejściowy do filtrowania produktów
   input ProductFilter {
     name: String
+    name_not_contains: String
+    name_extract_contains: String
+    name_not_equals: String
     category_id: ID
     supplier_id: ID
+    carbohydrates_equals: Float
+    protein_equals: Float
+    fats_equals: Float
     min_carbohydrates: Float
     max_carbohydrates: Float
     min_proteins: Float
@@ -130,6 +136,8 @@ const typeDefs = gql`
     min_rating: Float
     max_rating: Float
     name_contains: String
+    rating_equals: Float
+    ratung_not_equals: Float
   }
 
   # Typ zapytań
@@ -148,13 +156,13 @@ const typeDefs = gql`
     deleteProduct(id: ID!): Product # usuwanie pojedynczego produktu
     updateProduct(id: ID!, input: UpdateProductInput!): Product # aktualizacja danych porduktu 
 
-    addSupplier(input: SupplierInput!): Supplier
-    deleteSupplier(id: ID!): Supplier
-    updateSupplier(id: ID!, input: UpdateSupplierInput!): Supplier
-
-    addCategory(input: CategoryInput!): Category
-    updateCategory(id: ID!, input: UpdateCategoryInput!): Category
-    deleteCategory(id: ID!): Category
+    addSupplier(input: SupplierInput!): Supplier # Dodaj nowego dostawce
+    deleteSupplier(id: ID!): Supplier # usuwanie dostawcy 
+    updateSupplier(id: ID!, input: UpdateSupplierInput!): Supplier # aktualizacja dostawcy 
+ 
+    addCategory(input: CategoryInput!): Category # dodanie kategorii
+    updateCategory(id: ID!, input: UpdateCategoryInput!): Category # dodawanie kategorii
+    deleteCategory(id: ID!): Category # zmiana kategorii
   }
 `;
 

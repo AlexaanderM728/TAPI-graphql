@@ -77,6 +77,27 @@ const resolvers = {
           p.name.includes(filter.name)
         );
       }
+
+      // Filtorwanie po nazwie ktora nie zawiera
+      if (filter?.name_not_contains) {
+        filteredProducts = filteredProducts.filter(p =>
+          !p.name.toLowerCase().includes(filter.name_not_contains.toLowerCase())
+        );
+      }
+
+      // Filtorwanie po ciagu znaków wpisanych 
+      if (filter?.name_extract_contains) {
+        filteredProducts = filteredProducts.filter(p =>
+          p.name === filter.name_extract_contains
+        );
+      }
+
+      // Filtorwanie po ciagu znaków nie rownych 
+      if(filter?.name_not_equals){
+        filteredProducts = filteredProducts.filter(p =>
+          p.name !== filter.name_not_equals
+        );
+      }
     
       // Filtrowanie po kategorii
       if (filter?.category_id) {
@@ -127,6 +148,24 @@ const resolvers = {
           p => p.nutritional_values.fats <= filter.max_fats
         );
       }
+
+      //Filtorwanie wyników rownych liczbie 
+
+      if (filter?.carbohydrates_equals !== undefined) {
+        filteredProducts = filteredProducts.filter(
+          p => p.nutritional_values.carbohydrates === filter.carbohydrates_equals
+        );
+      }
+      if (filter?.protein_equals !== undefined) {
+        filteredProducts = filteredProducts.filter(
+          p => p.nutritional_values.proteins === filter.protein_equals
+        );
+      }
+      if (filter?.fats_equals !== undefined) {
+        filteredProducts = filteredProducts.filter(
+          p => p.nutritional_values.fats === filter.fats_equals
+        );
+      }
     
       // Filtrowanie po ratingu dostawcy
       if (filter?.min_rating || filter?.max_rating) {
@@ -143,15 +182,34 @@ const resolvers = {
       // Sortowanie
       if (sortBy) {
         filteredProducts.sort((a, b) => {
-          const aValue = a[sortBy];
-          const bValue = b[sortBy];
-          return sortOrder === 'desc' ? bValue - aValue : aValue - bValue;
+          let aValue = a;
+          let bValue = b;
+      
+          // Obsługa zagnieżdżonych pól 
+          if (sortBy.includes(".")) {
+            const keys = sortBy.split(".");
+            aValue = keys.reduce((obj, key) => (obj ? obj[key] : undefined), a);
+            bValue = keys.reduce((obj, key) => (obj ? obj[key] : undefined), b);
+          } else {
+            aValue = a[sortBy];
+            bValue = b[sortBy];
+          }
+      
+          if (aValue === undefined || bValue === undefined) return 0;
+          return sortOrder === "desc" ? bValue - aValue : aValue - bValue;
         });
       }
     
-      // Paginacja
-      if (limit != null) {
-        filteredProducts = filteredProducts.slice(offset || 0, (offset || 0) + limit);
+      // Paginacja i offset
+      if (offset != null && limit != null) {
+        // Jeśli podano zarówno offset, jak i limit
+        filteredProducts = filteredProducts.slice(offset, offset + limit);
+      } else if (offset != null) {
+        // Jeśli podano tylko offset
+        filteredProducts = filteredProducts.slice(offset);
+      } else if (limit != null) {
+        // Jeśli podano tylko limit
+        filteredProducts = filteredProducts.slice(0, limit);
       }
     
       return filteredProducts;
@@ -197,13 +255,40 @@ const resolvers = {
           s => s.name.toLowerCase().includes(filter.name_contains.toLowerCase())
         );
       }
+      // filtorwanie po ratingu rownym 
+      if(filter?.rating_equals !== undefined){
+        filteredSuppliers = filteredSuppliers.filter(
+          s => s.rating === filter.rating_equals
+        )
+      }
+       // filtorwanie po ratingu  nie rownym 
+       if(filter?.ratung_not_equals !== undefined){
+        filteredSuppliers = filteredSuppliers.filter(
+          s => s.rating !== filter.ratung_not_equals
+        )
+      }
 
       // Sortowanie
       if (sortBy) {
         filteredSuppliers.sort((a, b) => {
-          const aValue = a[sortBy];
-          const bValue = b[sortBy];
-
+          let aValue = a;
+          let bValue = b;
+      
+          // Obsługa zagnieżdżonych pól (np. "contact_info.phone")
+          if (sortBy.includes('.')) {
+            const keys = sortBy.split('.');
+            aValue = keys.reduce((obj, key) => (obj ? obj[key] : undefined), a);
+            bValue = keys.reduce((obj, key) => (obj ? obj[key] : undefined), b);
+          } else {
+            aValue = a[sortBy];
+            bValue = b[sortBy];
+          }
+      
+          // Obsługa wartości undefined/null
+          if (aValue == null) return sortOrder === 'desc' ? 1 : -1;
+          if (bValue == null) return sortOrder === 'desc' ? -1 : 1;
+      
+          // Sortowanie alfabetyczne lub numeryczne
           if (aValue < bValue) return sortOrder === 'desc' ? 1 : -1;
           if (aValue > bValue) return sortOrder === 'desc' ? -1 : 1;
           return 0;
@@ -211,8 +296,16 @@ const resolvers = {
       }
     
       // Paginate the results
-      if (limit != null) {
-        filteredSuppliers = filteredSuppliers.slice(offset || 0, (offset || 0) + limit);
+      // Paginacja i offset
+      if (offset != null && limit != null) {
+        // Jeśli podano zarówno offset, jak i limit
+        filteredSuppliers = filteredSuppliers.slice(offset, offset + limit);
+      } else if (offset != null) {
+        // Jeśli podano tylko offset
+        filteredSuppliers = filteredSuppliers.slice(offset);
+      } else if (limit != null) {
+        // Jeśli podano tylko limit
+        filteredSuppliers = filteredSuppliers.slice(0, limit);
       }
     
       return filteredSuppliers;

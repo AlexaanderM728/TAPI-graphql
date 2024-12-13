@@ -153,7 +153,7 @@ query GetSupplierID($idSupplier: ID!){
 }
 ---- GetSupplierID --------------
 
----- NEW product ----------------
+---- add product ----------------
 
 mutation addNewProduct($input: ProductInput!){
   addProduct(input: $input){
@@ -188,7 +188,7 @@ mutation addNewProduct($input: ProductInput!){
 }
 
 
----- NEW product ----------------
+---- add product ----------------
 
 ----- Delete Product by ID -------
 
@@ -368,6 +368,55 @@ query GetSuppliers(
 }
 
 ------- Filer mix Supplier --------
+
+------- Filter products offset Limit , equalts -------
+
+query GetFilteredProducts($filter: ProductFilter, $offset: Int, $limit: Int) {
+  products(filter: $filter, offset: $offset, limit: $limit) {
+    id
+    name
+    nutritional_values {
+      carbohydrates
+      proteins
+      fats
+    }
+  }
+}
+
+
+{
+  "filter": {
+    "carbohydrates_equals": 5.0
+  },
+  "offset": 2,
+  "limit":3
+}
+
+------- Filter products offset Limit , equalts -------
+
+-------Filter  Supplier offset limit sortBy  -------
+
+query GetFilteredSuppliers($filter: SupplierFilter, $limit: Int, $offset: Int, $sortOrder: String ,$sortBy: String) {
+  suppliers(filter: $filter, limit:$limit, offset:$offset, sortOrder: $sortOrder, sortBy: $sortBy) {
+    id_supplier
+    name
+    rating
+  }
+}
+
+
+{
+  "filter": {
+    "ratung_not_equals":4.5
+  },
+  "limit":10,
+  "offset":5,
+  "sortOrder": "desc",
+  "sortBy": "id_supplier"
+
+}
+
+-------Filter  Supplier offset limit sortBy  -------
 
 ------- Add Category --------------
 

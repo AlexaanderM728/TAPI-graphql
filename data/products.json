@@ -1109,5 +1109,16 @@
       "proteins": 21.37,
       "fats": 21.37
     }
+  },
+  {
+    "id": 102,
+    "name": "water nie naturalna",
+    "category_id": 104,
+    "id_supplier": 80,
+    "nutritional_values": {
+      "carbohydrates": 5,
+      "proteins": 2,
+      "fats": 3
+    }
   }
 ]
