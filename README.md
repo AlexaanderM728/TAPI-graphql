@@ -34,7 +34,7 @@ query AllprodcutsWithsupp{
 ## Category list 
 
 ```
-uery AllCategories{
+query AllCategories{
   categories {
     id_category
     name

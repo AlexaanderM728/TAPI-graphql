@@ -310,6 +310,16 @@ const resolvers = {
     
       return filteredSuppliers;
     },
+
+    categories: () => {
+      try {
+        return categories;
+      } catch (error) {
+        console.error("Błąd podczas pobierania kategorii:", error.message);
+        throw new Error("Nie można wczytać kategorii.");
+      }
+    },
+
   },
   
 
