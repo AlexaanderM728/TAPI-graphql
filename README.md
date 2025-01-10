@@ -71,7 +71,7 @@ query GetProduct($id: ID!) {
       proteins
       fats
     }
-    id_supplier {
+    supplier {   
       id_supplier
       name
       contact_info {
@@ -79,7 +79,7 @@ query GetProduct($id: ID!) {
         phone
       }
     }
-    category_id {
+    category {   
       id_category
       name
       main_category
